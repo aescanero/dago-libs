@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://disasterproject.com/schemas/router-node.schema.json",
+  "title": "RouterNode",
+  "description": "Router node configuration schema",
+  "type": "object",
+  "properties": {
+    "routes": {
+      "type": "array",
+      "description": "Conditional routing rules",
+      "items": {
+        "$ref": "#/definitions/route"
+      },
+      "minItems": 1
+    },
+    "default_route": {
+      "type": "string",
+      "description": "Fallback node ID if no conditions match",
+      "minLength": 1
+    },
+    "condition_type": {
+      "type": "string",
+      "enum": ["jsonpath", "simple", "custom"],
+      "description": "Type of condition evaluation",
+      "default": "simple"
+    }
+  },
+  "anyOf": [
+    {"required": ["routes"]},
+    {"required": ["default_route"]}
+  ],
+  "definitions": {
+    "route": {
+      "type": "object",
+      "required": ["target"],
+      "properties": {
+        "condition": {
+          "type": "string",
+          "description": "Expression to evaluate (e.g., 'state.score > 0.8')"
+        },
+        "target": {
+          "type": "string",
+          "description": "Target node ID if condition is true",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of this route"
+        },
+        "priority": {
+          "type": "integer",
+          "description": "Route priority (higher values evaluated first)",
+          "default": 0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,184 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://disasterproject.com/schemas/graph.schema.json",
+  "title": "Graph",
+  "description": "DA Orchestrator execution graph definition",
+  "type": "object",
+  "required": ["id", "nodes", "entry_node"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the graph",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable name for the graph"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of what this graph does"
+    },
+    "version": {
+      "type": "string",
+      "description": "Schema version",
+      "default": "1.0"
+    },
+    "nodes": {
+      "type": "object",
+      "description": "Map of node ID to node definition",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[a-zA-Z0-9_-]+$": {
+          "oneOf": [
+            {"$ref": "#/definitions/executorNode"},
+            {"$ref": "#/definitions/routerNode"}
+          ]
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "description": "Connections between nodes",
+      "items": {
+        "$ref": "#/definitions/edge"
+      }
+    },
+    "entry_node": {
+      "type": "string",
+      "description": "ID of the entry node",
+      "minLength": 1
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional graph-level metadata"
+    }
+  },
+  "definitions": {
+    "executorNode": {
+      "type": "object",
+      "required": ["id", "type", "executor_type"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "executor"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "executor_type": {
+          "type": "string",
+          "enum": ["llm", "tool", "python", "bash", "http", "custom"]
+        },
+        "config": {
+          "type": "object",
+          "description": "Executor-specific configuration"
+        },
+        "input_mapping": {
+          "type": "object",
+          "description": "Maps state keys to executor inputs",
+          "patternProperties": {
+            ".*": {"type": "string"}
+          }
+        },
+        "output_mapping": {
+          "type": "object",
+          "description": "Maps executor outputs to state keys",
+          "patternProperties": {
+            ".*": {"type": "string"}
+          }
+        },
+        "metadata": {
+          "type": "object"
+        }
+      }
+    },
+    "routerNode": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "router"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "routes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/route"
+          }
+        },
+        "default_route": {
+          "type": "string",
+          "description": "Fallback node ID if no conditions match"
+        },
+        "metadata": {
+          "type": "object"
+        }
+      }
+    },
+    "route": {
+      "type": "object",
+      "required": ["target"],
+      "properties": {
+        "condition": {
+          "type": "string",
+          "description": "Expression to evaluate for routing decision"
+        },
+        "target": {
+          "type": "string",
+          "description": "Target node ID",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string",
+          "description": "Source node ID",
+          "minLength": 1
+        },
+        "to": {
+          "type": "string",
+          "description": "Target node ID",
+          "minLength": 1
+        },
+        "condition": {
+          "type": "string",
+          "description": "Optional condition for edge traversal"
+        },
+        "label": {
+          "type": "string"
+        },
+        "metadata": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}
