@@ -97,7 +97,7 @@ func TestGraphGetNode(t *testing.T) {
 	g := NewGraph("test")
 
 	node := &mockNode{id: "node-1", nodeType: NodeTypeExecutor}
-	g.AddNode(node)
+	_ = g.AddNode(node)
 
 	retrieved := g.GetNode("node-1")
 	if retrieved != node {
@@ -116,11 +116,11 @@ func TestGraphRemoveNode(t *testing.T) {
 
 	node1 := &mockNode{id: "node-1", nodeType: NodeTypeExecutor}
 	node2 := &mockNode{id: "node-2", nodeType: NodeTypeExecutor}
-	g.AddNode(node1)
-	g.AddNode(node2)
+	_ = g.AddNode(node1)
+	_ = g.AddNode(node2)
 
 	edge := NewEdge("node-1", "node-2")
-	g.AddEdge(edge)
+	_ = g.AddEdge(edge)
 
 	// Remove node-1
 	g.RemoveNode("node-1")
@@ -140,8 +140,8 @@ func TestGraphAddEdge(t *testing.T) {
 
 	node1 := &mockNode{id: "node-1", nodeType: NodeTypeExecutor}
 	node2 := &mockNode{id: "node-2", nodeType: NodeTypeExecutor}
-	g.AddNode(node1)
-	g.AddNode(node2)
+	_ = g.AddNode(node1)
+	_ = g.AddNode(node2)
 
 	edge := NewEdge("node-1", "node-2")
 	err := g.AddEdge(edge)
@@ -167,7 +167,7 @@ func TestGraphAddEdgeNonExistentNode(t *testing.T) {
 	g := NewGraph("test")
 
 	node1 := &mockNode{id: "node-1", nodeType: NodeTypeExecutor}
-	g.AddNode(node1)
+	_ = g.AddNode(node1)
 
 	// Edge to non-existent node
 	edge := NewEdge("node-1", "non-existent")
@@ -183,13 +183,13 @@ func TestGraphGetOutgoingEdges(t *testing.T) {
 	node1 := &mockNode{id: "node-1", nodeType: NodeTypeExecutor}
 	node2 := &mockNode{id: "node-2", nodeType: NodeTypeExecutor}
 	node3 := &mockNode{id: "node-3", nodeType: NodeTypeExecutor}
-	g.AddNode(node1)
-	g.AddNode(node2)
-	g.AddNode(node3)
+	_ = g.AddNode(node1)
+	_ = g.AddNode(node2)
+	_ = g.AddNode(node3)
 
-	g.AddEdge(NewEdge("node-1", "node-2"))
-	g.AddEdge(NewEdge("node-1", "node-3"))
-	g.AddEdge(NewEdge("node-2", "node-3"))
+	_ = g.AddEdge(NewEdge("node-1", "node-2"))
+	_ = g.AddEdge(NewEdge("node-1", "node-3"))
+	_ = g.AddEdge(NewEdge("node-2", "node-3"))
 
 	outgoing := g.GetOutgoingEdges("node-1")
 	if len(outgoing) != 2 {
@@ -203,12 +203,12 @@ func TestGraphGetIncomingEdges(t *testing.T) {
 	node1 := &mockNode{id: "node-1", nodeType: NodeTypeExecutor}
 	node2 := &mockNode{id: "node-2", nodeType: NodeTypeExecutor}
 	node3 := &mockNode{id: "node-3", nodeType: NodeTypeExecutor}
-	g.AddNode(node1)
-	g.AddNode(node2)
-	g.AddNode(node3)
+	_ = g.AddNode(node1)
+	_ = g.AddNode(node2)
+	_ = g.AddNode(node3)
 
-	g.AddEdge(NewEdge("node-1", "node-3"))
-	g.AddEdge(NewEdge("node-2", "node-3"))
+	_ = g.AddEdge(NewEdge("node-1", "node-3"))
+	_ = g.AddEdge(NewEdge("node-2", "node-3"))
 
 	incoming := g.GetIncomingEdges("node-3")
 	if len(incoming) != 2 {
@@ -227,7 +227,7 @@ func TestGraphValidate(t *testing.T) {
 			setupGraph: func() *Graph {
 				g := NewGraph("test")
 				node := &mockNode{id: "node-1", nodeType: NodeTypeExecutor}
-				g.AddNode(node)
+				_ = g.AddNode(node)
 				g.EntryNode = "node-1"
 				return g
 			},
@@ -239,7 +239,7 @@ func TestGraphValidate(t *testing.T) {
 				g := NewGraph("test")
 				g.ID = ""
 				node := &mockNode{id: "node-1", nodeType: NodeTypeExecutor}
-				g.AddNode(node)
+				_ = g.AddNode(node)
 				g.EntryNode = "node-1"
 				return g
 			},
@@ -259,7 +259,7 @@ func TestGraphValidate(t *testing.T) {
 			setupGraph: func() *Graph {
 				g := NewGraph("test")
 				node := &mockNode{id: "node-1", nodeType: NodeTypeExecutor}
-				g.AddNode(node)
+				_ = g.AddNode(node)
 				return g
 			},
 			expectError: true,
@@ -269,7 +269,7 @@ func TestGraphValidate(t *testing.T) {
 			setupGraph: func() *Graph {
 				g := NewGraph("test")
 				node := &mockNode{id: "node-1", nodeType: NodeTypeExecutor}
-				g.AddNode(node)
+				_ = g.AddNode(node)
 				g.EntryNode = "non-existent"
 				return g
 			},
@@ -294,7 +294,7 @@ func TestGraphValidate(t *testing.T) {
 func TestGraphToJSON(t *testing.T) {
 	g := NewGraph("test")
 	node := &mockNode{id: "node-1", nodeType: NodeTypeExecutor}
-	g.AddNode(node)
+	_ = g.AddNode(node)
 	g.EntryNode = "node-1"
 
 	jsonStr, err := g.ToJSON()
@@ -314,8 +314,8 @@ func TestGraphNodeCount(t *testing.T) {
 		t.Errorf("expected 0 nodes, got %d", g.NodeCount())
 	}
 
-	g.AddNode(&mockNode{id: "node-1", nodeType: NodeTypeExecutor})
-	g.AddNode(&mockNode{id: "node-2", nodeType: NodeTypeExecutor})
+	_ = g.AddNode(&mockNode{id: "node-1", nodeType: NodeTypeExecutor})
+	_ = g.AddNode(&mockNode{id: "node-2", nodeType: NodeTypeExecutor})
 
 	if g.NodeCount() != 2 {
 		t.Errorf("expected 2 nodes, got %d", g.NodeCount())
@@ -327,14 +327,14 @@ func TestGraphEdgeCount(t *testing.T) {
 
 	node1 := &mockNode{id: "node-1", nodeType: NodeTypeExecutor}
 	node2 := &mockNode{id: "node-2", nodeType: NodeTypeExecutor}
-	g.AddNode(node1)
-	g.AddNode(node2)
+	_ = g.AddNode(node1)
+	_ = g.AddNode(node2)
 
 	if g.EdgeCount() != 0 {
 		t.Errorf("expected 0 edges, got %d", g.EdgeCount())
 	}
 
-	g.AddEdge(NewEdge("node-1", "node-2"))
+	_ = g.AddEdge(NewEdge("node-1", "node-2"))
 
 	if g.EdgeCount() != 1 {
 		t.Errorf("expected 1 edge, got %d", g.EdgeCount())
