@@ -64,6 +64,18 @@ type MetricsCollector interface {
 
 	// ObserveQueueWaitTime records how long an execution waited in the queue.
 	ObserveQueueWaitTime(duration time.Duration, labels map[string]string)
+
+	// RecordGraphSubmitted records a graph submission (compatibility method).
+	RecordGraphSubmitted(status string)
+
+	// RecordGraphCompleted records a graph completion (compatibility method).
+	RecordGraphCompleted(status string, duration time.Duration)
+
+	// RecordNodeExecuted records a node execution (compatibility method).
+	RecordNodeExecuted(status string, duration time.Duration)
+
+	// RecordWorkerPoolStatus records worker pool status (compatibility method).
+	RecordWorkerPoolStatus(idle, busy, stopped int)
 }
 
 // MetricsConfig contains configuration for metrics collection.

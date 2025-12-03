@@ -139,6 +139,9 @@ type LLMClient interface {
 	// StreamComplete performs a streaming completion (optional for MVP).
 	// Returns a channel that yields completion chunks as they arrive.
 	// StreamComplete(ctx context.Context, req CompletionRequest) (<-chan CompletionChunk, error)
+
+	// GenerateCompletion performs a generation using domain.LLMRequest (compatibility method).
+	GenerateCompletion(ctx context.Context, req interface{}) (interface{}, error)
 }
 
 // CompletionChunk represents a chunk of a streaming completion (for future use).
