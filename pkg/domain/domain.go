@@ -10,10 +10,17 @@ import (
 // Re-export types from sub-packages for compatibility
 type (
 	Graph    = graph.Graph
-	Node     = graph.Node
 	NodeType = graph.NodeType
 	State    = state.State
 )
+
+// Node represents a node in the graph with additional fields for compatibility
+type Node struct {
+	ID           string                 `json:"id"`
+	Type         NodeType               `json:"type"`
+	Dependencies []string               `json:"dependencies,omitempty"`
+	Config       map[string]interface{} `json:"config,omitempty"`
+}
 
 // Node type constants
 const (
@@ -73,6 +80,7 @@ const (
 	EventTypeNodeStarted     EventType = "node.started"
 	EventTypeNodeCompleted   EventType = "node.completed"
 	EventTypeNodeFailed      EventType = "node.failed"
+	EventTypeNodeReady       EventType = "node.ready"
 )
 
 // Event represents an event in the system

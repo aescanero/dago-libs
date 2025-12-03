@@ -28,6 +28,12 @@ type StateStorage interface {
 
 	// List returns all execution IDs that have stored state.
 	List(ctx context.Context) ([]string, error)
+
+	// SaveState persists graph state (compatibility method).
+	SaveState(ctx context.Context, state interface{}) error
+
+	// GetState retrieves graph state (compatibility method).
+	GetState(ctx context.Context, graphID string) (interface{}, error)
 }
 
 // GraphStorage defines the interface for persisting graph definitions.
