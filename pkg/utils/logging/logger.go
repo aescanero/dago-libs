@@ -69,7 +69,7 @@ func NewDefaultLogger() *Logger {
 // WithContext returns a logger with context values added.
 func (l *Logger) WithContext(ctx context.Context) *Logger {
 	return &Logger{
-		Logger: l.Logger.With(),
+		Logger: l.With(),
 	}
 }
 
@@ -80,14 +80,14 @@ func (l *Logger) WithFields(fields map[string]interface{}) *Logger {
 		args = append(args, k, v)
 	}
 	return &Logger{
-		Logger: l.Logger.With(args...),
+		Logger: l.With(args...),
 	}
 }
 
 // WithField returns a logger with an additional field.
 func (l *Logger) WithField(key string, value interface{}) *Logger {
 	return &Logger{
-		Logger: l.Logger.With(key, value),
+		Logger: l.With(key, value),
 	}
 }
 

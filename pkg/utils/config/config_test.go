@@ -12,8 +12,8 @@ func TestGetEnv(t *testing.T) {
 	defaultValue := "default"
 
 	// Test with environment variable set
-	os.Setenv(key, value)
-	defer os.Unsetenv(key)
+	_ = os.Setenv(key, value)
+	defer func() { _ = os.Unsetenv(key) }()
 
 	result := GetEnv(key, defaultValue)
 	if result != value {
@@ -21,7 +21,7 @@ func TestGetEnv(t *testing.T) {
 	}
 
 	// Test with environment variable not set
-	os.Unsetenv(key)
+	_ = os.Unsetenv(key)
 	result = GetEnv(key, defaultValue)
 	if result != defaultValue {
 		t.Errorf("expected default %q, got %q", defaultValue, result)
@@ -45,10 +45,10 @@ func TestGetEnvInt(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.envValue != "" {
-				os.Setenv(key, tt.envValue)
-				defer os.Unsetenv(key)
+				_ = os.Setenv(key, tt.envValue)
+				defer func() { _ = os.Unsetenv(key) }()
 			} else {
-				os.Unsetenv(key)
+				_ = os.Unsetenv(key)
 			}
 
 			result := GetEnvInt(key, defaultValue)
@@ -85,10 +85,10 @@ func TestGetEnvBool(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.envValue != "" {
-				os.Setenv(key, tt.envValue)
-				defer os.Unsetenv(key)
+				_ = os.Setenv(key, tt.envValue)
+				defer func() { _ = os.Unsetenv(key) }()
 			} else {
-				os.Unsetenv(key)
+				_ = os.Unsetenv(key)
 			}
 
 			result := GetEnvBool(key, tt.defaultValue)
@@ -118,10 +118,10 @@ func TestGetEnvDuration(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.envValue != "" {
-				os.Setenv(key, tt.envValue)
-				defer os.Unsetenv(key)
+				_ = os.Setenv(key, tt.envValue)
+				defer func() { _ = os.Unsetenv(key) }()
 			} else {
-				os.Unsetenv(key)
+				_ = os.Unsetenv(key)
 			}
 
 			result := GetEnvDuration(key, defaultValue)
@@ -137,8 +137,8 @@ func TestRequireEnv(t *testing.T) {
 	value := "required_value"
 
 	// Test with variable set
-	os.Setenv(key, value)
-	defer os.Unsetenv(key)
+	_ = os.Setenv(key, value)
+	defer func() { _ = os.Unsetenv(key) }()
 
 	result, err := RequireEnv(key)
 	if err != nil {
@@ -149,7 +149,7 @@ func TestRequireEnv(t *testing.T) {
 	}
 
 	// Test with variable not set
-	os.Unsetenv(key)
+	_ = os.Unsetenv(key)
 	result, err = RequireEnv(key)
 	if err == nil {
 		t.Error("expected error for missing required variable")
@@ -161,32 +161,32 @@ func TestRequireEnv(t *testing.T) {
 
 func TestLoadFromEnv(t *testing.T) {
 	// Set up test environment variables
-	os.Setenv("REDIS_ADDR", "redis.example.com:6379")
-	os.Setenv("REDIS_PASSWORD", "secret")
-	os.Setenv("REDIS_DB", "1")
-	os.Setenv("LOG_LEVEL", "debug")
-	os.Setenv("LOG_FORMAT", "json")
-	os.Setenv("METRICS_ENABLED", "true")
-	os.Setenv("METRICS_PORT", "9091")
-	os.Setenv("SERVICE_NAME", "test-service")
-	os.Setenv("SERVICE_PORT", "8081")
-	os.Setenv("DEFAULT_TIMEOUT", "10m")
-	os.Setenv("LLM_TIMEOUT", "3m")
-	os.Setenv("TOOL_TIMEOUT", "15m")
+	_ = os.Setenv("REDIS_ADDR", "redis.example.com:6379")
+	_ = os.Setenv("REDIS_PASSWORD", "secret")
+	_ = os.Setenv("REDIS_DB", "1")
+	_ = os.Setenv("LOG_LEVEL", "debug")
+	_ = os.Setenv("LOG_FORMAT", "json")
+	_ = os.Setenv("METRICS_ENABLED", "true")
+	_ = os.Setenv("METRICS_PORT", "9091")
+	_ = os.Setenv("SERVICE_NAME", "test-service")
+	_ = os.Setenv("SERVICE_PORT", "8081")
+	_ = os.Setenv("DEFAULT_TIMEOUT", "10m")
+	_ = os.Setenv("LLM_TIMEOUT", "3m")
+	_ = os.Setenv("TOOL_TIMEOUT", "15m")
 
 	defer func() {
-		os.Unsetenv("REDIS_ADDR")
-		os.Unsetenv("REDIS_PASSWORD")
-		os.Unsetenv("REDIS_DB")
-		os.Unsetenv("LOG_LEVEL")
-		os.Unsetenv("LOG_FORMAT")
-		os.Unsetenv("METRICS_ENABLED")
-		os.Unsetenv("METRICS_PORT")
-		os.Unsetenv("SERVICE_NAME")
-		os.Unsetenv("SERVICE_PORT")
-		os.Unsetenv("DEFAULT_TIMEOUT")
-		os.Unsetenv("LLM_TIMEOUT")
-		os.Unsetenv("TOOL_TIMEOUT")
+		_ = os.Unsetenv("REDIS_ADDR")
+		_ = os.Unsetenv("REDIS_PASSWORD")
+		_ = os.Unsetenv("REDIS_DB")
+		_ = os.Unsetenv("LOG_LEVEL")
+		_ = os.Unsetenv("LOG_FORMAT")
+		_ = os.Unsetenv("METRICS_ENABLED")
+		_ = os.Unsetenv("METRICS_PORT")
+		_ = os.Unsetenv("SERVICE_NAME")
+		_ = os.Unsetenv("SERVICE_PORT")
+		_ = os.Unsetenv("DEFAULT_TIMEOUT")
+		_ = os.Unsetenv("LLM_TIMEOUT")
+		_ = os.Unsetenv("TOOL_TIMEOUT")
 	}()
 
 	cfg := LoadFromEnv()
@@ -239,7 +239,7 @@ func TestLoadFromEnv_Defaults(t *testing.T) {
 		"DEFAULT_TIMEOUT", "LLM_TIMEOUT", "TOOL_TIMEOUT",
 	}
 	for _, v := range vars {
-		os.Unsetenv(v)
+		_ = os.Unsetenv(v)
 	}
 
 	cfg := LoadFromEnv()
